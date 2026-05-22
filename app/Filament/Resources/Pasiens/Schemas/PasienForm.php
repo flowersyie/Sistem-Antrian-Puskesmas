@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Pasiens\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class PasienForm
@@ -79,17 +80,14 @@ class PasienForm
                     ->searchable()
                     ->native(false),
 
-                Select::make('status')
+                TextInput::make('status_display')
                     ->label('Status')
-                    ->required()
-                    ->options([
-                        'menunggu'  => 'Menunggu',
-                        'dipanggil' => 'Dipanggil',
-                        'selesai'   => 'Selesai',
-                        'batal'     => 'Batal',
-                    ])
-                    ->default('menunggu')
-                    ->native(false),
+                    ->default('Menunggu')
+                    ->disabled()
+                    ->dehydrated(false),
+
+                Hidden::make('status')
+                    ->default('menunggu'),
             ]);
     }
 }
