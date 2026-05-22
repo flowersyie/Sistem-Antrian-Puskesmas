@@ -11,7 +11,7 @@ class CreatePasien extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return PasienResource::getUrl('view', ['record' => $this->record]);
+        return PasienResource::getUrl('index');
     }
 
     protected function afterCreate(): void

@@ -184,7 +184,6 @@
         }
         .list-header h3 { color: #f9fafb; font-size: 14px; font-weight: 700; }
         .list-header p  { color: #6b7280; font-size: 12px; margin-top: 2px; }
-
         .filter-tabs {
             display: flex;
             gap: 4px;
@@ -204,7 +203,6 @@
             transition: all .15s;
         }
         .filter-tab.active-tab { background: #fff; color: #111827; }
-
         .patients-list {
             padding: 14px;
             display: flex;
@@ -215,7 +213,6 @@
         }
         .patients-list::-webkit-scrollbar { width: 4px; }
         .patients-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-
         .patient-card {
             display: flex;
             align-items: center;
@@ -227,36 +224,30 @@
             transition: border-color .15s;
         }
         .patient-card:hover { border-color: #9ca3af; }
-        .patient-card.is-dipanggil {
-            background: #111827;
-            border-color: #374151;
-        }
+        .patient-card.is-dipanggil { background: #111827; border-color: #374151; }
         .patient-card.is-dipanggil .patient-name { color: #f9fafb; }
         .patient-card.is-dipanggil .meta-pill { background: #1f2937; color: #9ca3af; border-color: #374151; }
         .patient-card.is-selesai { opacity: .55; }
-
         .queue-badge {
-            min-width: 54px;
+            min-width: 64px;
+            width: auto;
             height: 54px;
+            padding: 0 8px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 16px;
+            font-size: 14px;
             flex-shrink: 0;
             border: 2px solid #e5e7eb;
             background: #fff;
             color: #111827;
+            white-space: nowrap;
         }
-        .patient-card.is-dipanggil .queue-badge {
-            background: #fff;
-            color: #111827;
-            border-color: #9ca3af;
-        }
+        .patient-card.is-dipanggil .queue-badge { background: #fff; color: #111827; border-color: #9ca3af; }
         .q-label { font-size: 8px; font-weight: 600; text-transform: uppercase; opacity: .5; margin-top: 1px; }
-
         .patient-info { flex: 1; min-width: 0; }
         .patient-name { font-size: 14px; font-weight: 700; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .patient-meta { font-size: 11px; margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
@@ -269,7 +260,6 @@
             font-weight: 600;
             border: 1px solid #e5e7eb;
         }
-
         .status-badge {
             padding: 4px 10px;
             border-radius: 999px;
@@ -283,7 +273,20 @@
         .s-dipanggil { background: #fff;    color: #111827; border-color: #fff; }
         .s-selesai   { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
         .s-batal     { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-
+        .btn-selesai {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            border: 1.5px solid #16a34a;
+            background: #dcfce7;
+            color: #15803d;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background .15s, color .15s;
+        }
+        .btn-selesai:hover { background: #16a34a; color: #fff; }
         .empty-state { text-align: center; padding: 48px 24px; color: #9ca3af; }
         .empty-state p { font-size: 13px; margin-top: 10px; }
     </style>
@@ -389,7 +392,7 @@
                     <p>{{ now()->translatedFormat('l, d F Y') }}</p>
                 </div>
                 <div class="filter-tabs">
-                    @foreach (['all' => 'Semua', 'menunggu' => 'Menunggu', 'dipanggil' => 'Dipanggil', 'selesai' => 'Selesai'] as $key => $label)
+                    @foreach (['menunggu' => 'Menunggu', 'dipanggil' => 'Dipanggil', 'selesai' => 'Selesai', 'all' => 'Semua'] as $key => $label)
                     <button
                         class="filter-tab {{ $filterStatus === $key ? 'active-tab' : '' }}"
                         wire:click="$set('filterStatus', '{{ $key }}')"
@@ -410,8 +413,8 @@
             <div class="patients-list">
                 @forelse ($patients as $p)
                 @php
-                    $cardClass    = $p->status === 'dipanggil' ? 'is-dipanggil' : ($p->status === 'selesai' ? 'is-selesai' : '');
-                    $statusLabel  = match($p->status) {
+                    $cardClass   = $p->status === 'dipanggil' ? 'is-dipanggil' : ($p->status === 'selesai' ? 'is-selesai' : '');
+                    $statusLabel = match($p->status) {
                         'menunggu'  => 'Menunggu',
                         'dipanggil' => 'Dipanggil',
                         'selesai'   => 'Selesai',
@@ -435,16 +438,13 @@
                         <div class="patient-meta">
                             <span class="meta-pill">{{ $poliMap[$p->poli] ?? $p->poli }}</span>
                             <span class="meta-pill">{{ $penjaminLabel }}</span>
-                            @if ($p->nik)
-                            <span class="meta-pill">NIK: {{ \Illuminate\Support\Str::mask((string)$p->nik, '*', 4, -4) }}</span>
-                            @endif
                         </div>
                     </div>
                     <span class="status-badge s-{{ $p->status }}">{{ $statusLabel }}</span>
                 </div>
                 @empty
                 <div class="empty-state">
-                    <svg width="40" height="40" fill="none" stroke="#9ca3af" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg>
+                    <svg width="40" height="40" fill="none" stroke="#9ca3af" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
                     <p>Belum ada pasien terdaftar hari ini</p>
                 </div>
                 @endforelse

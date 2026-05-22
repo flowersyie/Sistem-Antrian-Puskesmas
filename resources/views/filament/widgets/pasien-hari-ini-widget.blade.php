@@ -107,7 +107,10 @@
 
 
         .phw-queue {
-            width: 52px; height: 52px;
+            min-width: 64px;
+            width: auto;
+            height: 52px;
+            padding: 0 8px;
             border-radius: 12px;
             background: #fff;
             border: 2px solid #e5e7eb;
@@ -116,9 +119,10 @@
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 15px;
+            font-size: 14px;
             color: #0f172a;
             flex-shrink: 0;
+            white-space: nowrap;
         }
         .st-dipanggil .phw-queue {
             background: #1e293b;
@@ -190,6 +194,26 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+        .phw-btn-selesai {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            border: 1.5px solid #16a34a;
+            background: #dcfce7;
+            color: #15803d;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background .15s, color .15s;
+        }
+        .phw-btn-selesai:hover { background: #16a34a; color: #fff; }
+        .st-dipanggil .phw-btn-selesai {
+            border-color: #4ade80;
+            background: rgba(74,222,128,.15);
+            color: #4ade80;
+        }
+        .st-dipanggil .phw-btn-selesai:hover { background: #16a34a; color: #fff; }
     </style>
 
     @php
@@ -219,10 +243,10 @@
 
             <div class="phw-tabs">
                 @foreach ([
-                    'all'       => 'Semua',
                     'menunggu'  => 'Menunggu',
                     'dipanggil' => 'Dipanggil',
                     'selesai'   => 'Selesai',
+                    'all'       => 'Semua',
                 ] as $key => $label)
                 <button
                     class="phw-tab {{ $filterStatus === $key ? 'active' : '' }}"
@@ -271,19 +295,26 @@
                     <div class="phw-sub">
                         <span class="phw-pill">{{ $poliMap[$p->poli] ?? $p->poli }}</span>
                         <span class="phw-pill">{{ $penjaminLabel }}</span>
-                        @if ($p->nik)
-                        <span class="phw-pill">NIK: {{ \Illuminate\Support\Str::mask((string)$p->nik, '*', 4, -4) }}</span>
-                        @endif
+
                     </div>
                 </div>
 
 
                 <div class="phw-time">
-                    {{ $p->created_at->format('H:i') }}
+                    {{ $p->created_at->setTimezone('Asia/Jakarta')->format('H:i') }}
                 </div>
 
-
                 <span class="phw-status phw-s-{{ $p->status }}">{{ $statusLabel }}</span>
+
+                @if ($filterStatus === 'all' && $p->status !== 'selesai' && $p->status !== 'batal')
+                <button
+                    class="phw-btn-selesai"
+                    wire:click="tandaiSelesai({{ $p->id }})"
+                    wire:confirm="Tandai {{ $p->name }} sebagai selesai?"
+                >
+                    ✓ Selesai
+                </button>
+                @endif
             </div>
             @empty
             <div class="phw-empty">

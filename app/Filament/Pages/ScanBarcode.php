@@ -128,4 +128,14 @@ class ScanBarcode extends Page
             default         => $penjamin ?? '-',
         };
     }
+    public function tandaiSelesai(int $id): void
+    {
+        Pasien::where('id', $id)->update(['status' => 'selesai']);
+
+        Notification::make()
+            ->title('✅ Status diperbarui: Selesai')
+            ->success()
+            ->duration(3000)
+            ->send();
+    }
 }

@@ -11,46 +11,99 @@
             background: #f0f4f8;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; 
             min-height: 100vh;
             padding: 24px 16px;
         }
-        .action-bar { display: flex; gap: 12px; margin-bottom: 24px; }
-        .btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity .2s; }
-        .btn:hover { opacity: .85; }
-        .btn-print { background: #10b981; color: #fff; }
-        .btn-close  { background: #6b7280; color: #fff; }
+
+        .action-bar { 
+            display: flex; 
+            gap: 12px; 
+            margin-bottom: 24px; 
+        }
+
+        .btn { 
+            padding: 10px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: opacity .2s; 
+        }
+
+        .btn:hover { 
+            opacity: .85; 
+        }
+
+        .btn-print { 
+            background: #10b981; 
+            color: #fff; 
+        }
+
+        .btn-close  { 
+            background: #6b7280; 
+            color: #fff; 
+        }
 
         .ticket { width: 300px; background: #fff; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,.15); overflow: hidden; }
 
-        .ticket-header { background: #111827; color: #fff; text-align: center; padding: 18px 16px 14px; }
-        .ticket-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
-        .ticket-header p  { font-size: 11px; opacity: .7; margin-top: 2px; }
+        .ticket-header { background: #ffffff; color: #000000; text-align: center; padding: 20px 16px 14px; }
+        .ticket-header h1 { font-size: 19px; font-weight: 900; letter-spacing: .5px; text-transform: uppercase; color: #000000; }
+        .ticket-header p  { font-size: 12px; font-weight: 700; margin-top: 4px; color: #000000; } 
 
-        .dashed { border: none; border-top: 2px dashed #e5e7eb; margin: 0 16px; }
+        .dashed { border: none; border-top: 1.5px dashed #000000; margin: 0 12px; }
 
-        .queue-block { text-align: center; padding: 22px 16px 20px; }
-        .queue-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .queue-number { font-size: 64px; font-weight: 900; color: #111827; line-height: 1; letter-spacing: -1px; }
+        .queue-block { text-align: center; padding: 22px 8px 20px; }
+        .queue-label { font-size: 12px; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; } 
+        
+        .queue-number { 
+            font-size: 48px; 
+            font-weight: 900; 
+            color: #000000; 
+            line-height: 1.1; 
+            letter-spacing: -1px;
+            white-space: nowrap; 
+        }
+        
         .poli-badge {
-            display: inline-block; background: #f3f4f6; color: #374151;
-            font-size: 12px; font-weight: 700; padding: 5px 16px;
-            border-radius: 999px; margin-top: 10px; text-transform: uppercase;
-            letter-spacing: .5px; border: 1px solid #d1d5db;
+            display: inline-block; background: #ffffff; color: #000000;
+            font-size: 13px; font-weight: 800; padding: 5px 16px;
+            border-radius: 999px; margin-top: 12px; text-transform: uppercase;
+            letter-spacing: .5px; border: 2px solid #000000;
         }
 
-        .barcode-section { padding: 14px 0 4px; display: flex; flex-direction: column; align-items: center; gap: 0; }
-        .barcode-id-label { font-size: 9px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .8px; margin-top: 6px; }
-        #barcodeSvg { display: block; max-width: 260px; }
+        .barcode-section { padding: 14px 0 16px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+        .barcode-id-label { font-size: 10px; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: .8px; margin-top: 6px; } 
+        #barcodeSvg { display: block; max-width: 100%; }
 
-        .ticket-footer { background: #f9fafb; border-top: 1px solid #f3f4f6; text-align: center; padding: 12px 16px; }
-        .ticket-footer p { font-size: 10.5px; color: #9ca3af; line-height: 1.6; }
-        .ticket-footer strong { color: #6b7280; }
+        .ticket-footer { background: #ffffff; text-align: center; padding: 16px 12px; }
+        .ticket-footer p { font-size: 11px; color: #000000; font-weight: 700; line-height: 1.6; } 
+        .ticket-footer strong { color: #000000; font-weight: 900; }
 
         @media print {
-            body { background: #fff; padding: 0; }
+            @page {
+                margin: 0;
+                size: 58mm auto;
+            }
+            body { 
+                background: #fff; 
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                min-height: unset;
+            }
             .action-bar { display: none !important; }
-            .ticket { box-shadow: none; border-radius: 0; width: 100%; max-width: 280px; margin: 0 auto; }
+            
+            .ticket { 
+                box-shadow: none; 
+                border-radius: 0; 
+                width: 58mm;
+                max-width: 58mm;
+                margin: 0 auto; 
+            }
         }
     </style>
 </head>
@@ -107,16 +160,16 @@
             const barcodeValue = '{{ $pasien->qr_id }}';
             JsBarcode('#barcodeSvg', barcodeValue, {
                 format:      'CODE128',
-                width:       2.2,
-                height:      60,
+                width:       1.8,
+                height:      50,
                 displayValue: true,
-                fontSize:    13,
+                fontSize:    13, 
                 fontOptions: 'bold',
                 font:        'Courier New',
                 textMargin:  4,
-                margin:      10,
+                margin:      5,
                 background:  '#ffffff',
-                lineColor:   '#111827'
+                lineColor:   '#000000' 
             });
         });
     </script>

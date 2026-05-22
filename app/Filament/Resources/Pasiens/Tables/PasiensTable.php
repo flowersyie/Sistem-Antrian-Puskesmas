@@ -31,7 +31,7 @@ class PasiensTable
                 TextColumn::make('nik')
                     ->label('NIK')
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('phone')
                     ->label('No. Telepon')
@@ -94,6 +94,7 @@ class PasiensTable
                 TextColumn::make('created_at')
                     ->label('Tgl. Daftar')
                     ->dateTime('d/m/Y H:i')
+                    ->timezone('Asia/Jakarta')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 

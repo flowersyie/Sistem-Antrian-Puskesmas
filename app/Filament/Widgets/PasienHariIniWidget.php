@@ -13,6 +13,8 @@ class PasienHariIniWidget extends Widget
 
     protected int | string | array $columnSpan = 'full';
 
+    protected static ?string $pollingInterval = '5s';
+
     public string $filterStatus = 'all';
 
     public function getPasienListProperty(): \Illuminate\Database\Eloquent\Collection
@@ -38,6 +40,11 @@ class PasienHariIniWidget extends Widget
             'dipanggil' => (clone $today)->where('status', 'dipanggil')->count(),
             'selesai'   => (clone $today)->where('status', 'selesai')->count(),
         ];
+    }
+
+    public function tandaiSelesai(int $id): void
+    {
+        Pasien::where('id', $id)->update(['status' => 'selesai']);
     }
 
     private function formatPoli(string $poli): string

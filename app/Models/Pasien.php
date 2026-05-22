@@ -30,14 +30,22 @@ class Pasien extends Model
                 $pasien->qr_id = $qrId;
             }
             if (empty($pasien->queue_number)) {
-                do {
-                    $random = 'A-' . str_pad(random_int(1, 999), 3, '0', STR_PAD_LEFT);
-                    $exists = static::whereDate('created_at', now()->toDateString())
-                                    ->where('queue_number', $random)
-                                    ->exists();
-                } while ($exists);
-
-                $pasien->queue_number = $random;
+                $poliPrefix = [
+                    'umum'   => 'U',
+                    'gigi'   => 'G',
+                    'anak'   => 'A',
+                    'kia'    => 'K',
+                    'lansia' => 'L',
+                    'jiwa'   => 'J',
+                    'gizi'   => 'Z',
+                    'mata'   => 'M',
+                    'tht'    => 'T',
+                ];
+                $prefix = $poliPrefix[$pasien->poli] ?? 'X';
+                $count = static::whereDate('created_at', now()->toDateString())
+                    ->where('poli', $pasien->poli)
+                    ->count();
+                $pasien->queue_number = $prefix . '-' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
             }
         });
     }
