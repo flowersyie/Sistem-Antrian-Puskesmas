@@ -77,16 +77,14 @@ class PasiensTable
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'menunggu'  => 'warning',
-                        'dipanggil' => 'gray',
+                        'dipanggil' => 'info',
                         'selesai'   => 'success',
-                        'batal'     => 'danger',
                         default     => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'menunggu'  => 'Menunggu',
                         'dipanggil' => 'Dipanggil',
                         'selesai'   => 'Selesai',
-                        'batal'     => 'Batal',
                         default     => $state,
                     })
                     ->searchable(),

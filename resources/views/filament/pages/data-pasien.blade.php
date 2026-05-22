@@ -98,10 +98,41 @@
             border-radius: 50%;
             flex-shrink: 0;
         }
-        .dp-dot-menunggu  { background: #f59e0b; }
+        .dp-dot-menunggu  { background: #f97316; }
         .dp-dot-dipanggil { background: #3b82f6; }
         .dp-dot-selesai   { background: #22c55e; }
-        .dp-dot-batal     { background: #ef4444; }
+        .dp-hadir-time {
+            font-size: 10px;
+            font-weight: 600;
+            color: #1e40af;
+            background: #dbeafe;
+            border: 1px solid #bfdbfe;
+            border-radius: 5px;
+            padding: 2px 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .dp-hadir-time svg {
+            width: 10px;
+            height: 10px;
+            color: #2563eb;
+        }
+        .dp-hadir-jam {
+            color: #065f46;
+            background: #d1fae5;
+            border-color: #a7f3d0;
+        }
+        .dp-hadir-jam svg {
+            color: #059669;
+        }
+        .dp-poli-card-header-meta {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
         .dp-empty-poli {
             text-align: center;
             padding: 32px 16px;
@@ -126,7 +157,10 @@
             @foreach ($poliSummary as $poli)
             <div class="dp-poli-card">
                 <div class="dp-poli-card-header">
-                    <span class="dp-poli-name">{{ $poli['label'] }}</span>
+                    <div>
+                        <div class="dp-poli-name">{{ $poli['label'] }}</div>
+                        <div class="dp-poli-card-header-meta">{{ now()->locale('id')->isoFormat('D MMM YYYY') }}</div>
+                    </div>
                     <span class="dp-poli-count">{{ $poli['patients']->count() }} pasien</span>
                 </div>
                 <div class="dp-poli-card-body">
@@ -136,12 +170,25 @@
                             'menunggu'  => 'dp-dot-menunggu',
                             'dipanggil' => 'dp-dot-dipanggil',
                             'selesai'   => 'dp-dot-selesai',
-                            default     => 'dp-dot-batal',
+                            default     => 'dp-dot-menunggu',
                         };
                     @endphp
                     <div class="dp-patient-row">
                         <span class="dp-queue-num">{{ $p->queue_number }}</span>
                         <span class="dp-patient-name">{{ $p->name }}</span>
+                        <span class="dp-hadir-time" title="Tanggal & Jam Hadir">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            {{ $p->created_at->setTimezone('Asia/Jakarta')->format('d/m/Y') }}
+                        </span>
+                        <span class="dp-hadir-time dp-hadir-jam" title="Jam Hadir">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path stroke-linecap="round" d="M12 6v6l4 2"/>
+                            </svg>
+                            {{ $p->created_at->setTimezone('Asia/Jakarta')->format('H:i') }}
+                        </span>
                         <span class="dp-status-dot {{ $dotClass }}" title="{{ ucfirst($p->status) }}"></span>
                     </div>
                     @endforeach
